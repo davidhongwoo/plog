@@ -32,15 +32,9 @@ namespace plog
 {
     namespace util
     {
-#ifdef _WIN32
-        typedef std::wstring nstring;
-        typedef std::wstringstream nstringstream;
-        typedef wchar_t nchar;
-#else
-        typedef std::string nstring;
-        typedef std::stringstream nstringstream;
-        typedef char nchar;
-#endif
+        /* typedef std::string nstring; */
+        /* typedef std::stringstream nstringstream; */
+        /* typedef char char; */
 
         inline void localtime_s(struct tm* t, const time_t* time)
         {
@@ -90,59 +84,6 @@ namespace plog
 #endif
         }
 
-#if !defined(__ANDROID__) && !defined(_WIN32)
-        inline std::string toNarrow(const wchar_t* wstr)
-        {
-            size_t wlen = ::wcslen(wstr);
-            std::string str(wlen * sizeof(wchar_t), 0);
-
-            if (!str.empty())
-            {
-                const char* in = reinterpret_cast<const char*>(&wstr[0]);
-                char* out = &str[0];
-                size_t inBytes = wlen * sizeof(wchar_t);
-                size_t outBytes = str.size();
-
-                iconv_t cd = ::iconv_open("UTF-8", "WCHAR_T");
-                ::iconv(cd, const_cast<char**>(&in), &inBytes, &out, &outBytes);
-                ::iconv_close(cd); 
-
-                str.resize(str.size() - outBytes);
-            }
-
-            return str;
-        }
-#endif
-
-#ifdef _WIN32
-        inline std::wstring toWide(const char* str)
-        {
-            size_t len = ::strlen(str);
-            std::wstring wstr(len, 0);
-
-            if (!wstr.empty())
-            {
-                int wlen = ::MultiByteToWideChar(CP_ACP, 0, str, static_cast<int>(len), &wstr[0], static_cast<int>(wstr.size()));
-                wstr.resize(wlen);
-            }
-
-            return wstr;
-        }
-
-        inline std::string toUTF8(const std::wstring& wstr)
-        {
-            std::string str(wstr.size() * sizeof(wchar_t), 0);
-
-            if (!str.empty())
-            {
-                int len = ::WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), static_cast<int>(wstr.size()), &str[0], static_cast<int>(str.size()), 0, 0);
-                str.resize(len);
-            }
-
-            return str;
-        }
-#endif
-
         inline std::string processFuncName(const char* func)
         {
 #if (defined(_WIN32) && !defined(__MINGW32__)) || defined(__OBJC__)
@@ -169,7 +110,7 @@ namespace plog
 #endif
         }
 
-        inline const nchar* findExtensionDot(const nchar* fileName)
+        inline const char* findExtensionDot(const char* fileName)
         {
 #ifdef _WIN32
             return std::wcsrchr(fileName, L'.');
@@ -178,9 +119,9 @@ namespace plog
 #endif
         }
 
-        inline void splitFileName(const nchar* fileName, nstring& fileNameNoExt, nstring& fileExt)
+        inline void splitFileName(const char* fileName, std::string& fileNameNoExt, std::string& fileExt)
         {
-            const nchar* dot = findExtensionDot(fileName);
+            const char* dot = findExtensionDot(fileName);
 
             if (dot)
             {
@@ -213,7 +154,7 @@ namespace plog
             {
             }
 
-            File(const nchar* fileName) : m_file(-1)
+            File(const char* fileName) : m_file(-1)
             {
                 open(fileName);
             }
@@ -223,7 +164,7 @@ namespace plog
                 close();
             }
 
-            off_t open(const nchar* fileName)
+            off_t open(const char* fileName)
             {
 #if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
                 m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY, SH_DENYWR, _S_IREAD | _S_IWRITE);
@@ -272,7 +213,7 @@ namespace plog
                 }
             }
 
-            static int unlink(const nchar* fileName)
+            static int unlink(const char* fileName)
             {
 #ifdef _WIN32
                 return ::_wunlink(fileName);
@@ -281,7 +222,7 @@ namespace plog
 #endif
             }
 
-            static int rename(const nchar* oldFilename, const nchar* newFilename)
+            static int rename(const char* oldFilename, const char* newFilename)
             {
 #ifdef _WIN32
                 return ::MoveFileW(oldFilename, newFilename);

@@ -37,15 +37,11 @@ int main()
 
     // Null strings are safe.
     LOG_DEBUG << static_cast<char*>(NULL);
-    LOG_DEBUG << static_cast<wchar_t*>(NULL);
     LOG_DEBUG << static_cast<const char*>(NULL);
-    LOG_DEBUG << static_cast<const wchar_t*>(NULL);
 
     // Plog handles unicode and std::string/wstring.
     LOG_DEBUG << "Cat - котэ";
     LOG_DEBUG << L"Cat - котэ";
-    LOG_DEBUG << std::string("test - тест");
-    LOG_DEBUG << std::wstring(L"test - тест");
     LOG_DEBUG << L'ы';
 
     // Multiline.

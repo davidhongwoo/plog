@@ -9,14 +9,14 @@ namespace plog
     class MyFormatter
     {
     public:
-        static util::nstring header() // This method returns a header for a new file. In our case it is empty.
+        static std::string header() // This method returns a header for a new file. In our case it is empty.
         {
-            return util::nstring();
+            return std::string();
         }
 
-        static util::nstring format(const Record& record) // This method returns a string from a record.
+        static std::string format(const Record& record) // This method returns a string from a record.
         {
-            util::nstringstream ss;
+            std::stringstream ss;
             ss << record.getMessage().c_str() << "\n"; // Produce a simple string with a log message.
 
             return ss.str();

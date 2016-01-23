@@ -7,14 +7,14 @@ namespace plog
     class FuncMessageFormatter
     {
     public:
-        static util::nstring header()
+        static std::string header()
         {
-            return util::nstring();
+            return std::string();
         }
 
-        static util::nstring format(const Record& record)
+        static std::string format(const Record& record)
         {
-            util::nstringstream ss;
+            std::stringstream ss;
             ss << record.getFunc().c_str() << "@" << record.getLine() << ": ";
             ss << record.getMessage().c_str() << "\n";
 

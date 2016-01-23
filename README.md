@@ -25,8 +25,6 @@ Pretty powerful log in less than 1000 lines of code [![Build Status](https://tra
     - [TxtFormatter](#txtformatter)
     - [CsvFormatter](#csvformatter)
     - [FuncMessageFormatter](#funcmessageformatter)
-  - [Converter](#converter)
-    - [UTF8Converter](#utf8converter)
   - [Appender](#appender)
     - [RollingFileAppender](#rollingfileappender)
     - [ConsoleAppender](#consoleappender)
@@ -95,7 +93,6 @@ And its output:
 - Appenders: [RollingFile](#rollingfileappender), [Console](#consoleappender), [ColorConsole](#colorconsoleappender), [Android](#androidappender)
 - [Automatic 'this' pointer capture](#automatic-this-pointer-capture) (supported only on msvc)
 - [Lazy stream evaluation](#lazy-stream-evaluation)
-- [Unicode aware](#unicode), files are stored in UTF8
 - Doesn't require C++11
 - [Extendable](#extending)
 
@@ -433,11 +430,6 @@ class FuncMessageFormatter {
     {static} format();
 }
 
-class UTF8Converter {
-    {static} header();
-    {static} convert();
-}
-
 enum Severity {
     none,
     fatal,
@@ -627,9 +619,6 @@ public:
 
 *See [How to implement a custom converter](#custom-converter).*
 
-###UTF8Converter
-[UTF8Converter](#utf8converter) is the only converter available in plog out of the box. It converts string data to UTF-8 with BOM. 
-
 ##Appender
 [Appender](#appender) uses [Formatter](#formatter) and [Converter](#converter) to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must implement `IAppender` interface (the only interface in plog):
 
@@ -716,7 +705,6 @@ The core plog functionality is provided by inclusion of `plog/Log.h` file. Extra
 package "Plog core\n(no additional include, just plog/Log.h)" {
   class TxtFormatter
   class CsvFormatter
-  class UTF8Converter
   class RollingFileAppender
 }
 package "Plog extra\n(requires additional include)" {
@@ -729,35 +717,6 @@ hide empty members
 hide empty fields
 @enduml
 -->
-
-##Unicode
-Plog is unicode aware and wide string friendly. All messages are converted to a system native char type:
-
-- `wchar_t` - on Windows
-- `char` - on all other systems
-
-Also `char` is treated as:
-
-- active code page - on Windows
-- UTF-8 - on all other systems
-
-Internally plog uses `nstring`, `nstringstream` and `nchar` ('n' for native) that are defined as:
-
-```cpp
-#ifdef _WIN32
-    typedef std::wstring nstring;
-    typedef std::wstringstream nstringstream;
-    typedef wchar_t nchar;
-#else
-    typedef std::string nstring;
-    typedef std::stringstream nstringstream;
-    typedef char nchar;
-#endif
-```
-
-By default all log files are stored in UTF-8 with BOM thanks to [UTF8Converter](#utf8converter).
-
-*Note: on Android wide string support in plog is disabled.*
 
 ##Performance
 Plog is not using any asynchronous techniques so it may slow down your application on large volumes of log messages. 
@@ -902,6 +861,9 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 Plog is licensed under the [MPL version 2.0](http://mozilla.org/MPL/2.0/). You can freely use it in your commercial or opensource software.
 
 #Version history
+
+##Version 1.0.1.1 (23 Jan 2016)
+- Disable unicode support
 
 ##Version 1.0.1 (01 Nov 2015)
 - New: Added ColorConsoleAppender

@@ -14,18 +14,18 @@ namespace plog
     public:
         virtual void write(const Record& record) // This is a method from IAppender that MUST be implemented.
         {
-            util::nstring str = Formatter::format(record); // Use the formatter to get a string from a record.
+            std::string str = Formatter::format(record); // Use the formatter to get a string from a record.
 
             m_messageList.push_back(str); // Store a log message in a list.
         }
 
-        std::list<util::nstring>& getMessageList()
+        std::list<std::string>& getMessageList()
         {
             return m_messageList;
         }
 
     private:
-        std::list<util::nstring> m_messageList;
+        std::list<std::string> m_messageList;
     };
 }
 

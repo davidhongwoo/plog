@@ -1,15 +1,14 @@
 #pragma once
 #include <algorithm>
 #include <plog/Util.h>
-#include <plog/Converters/UTF8Converter.h>
 
 namespace plog
 {
-    template<class Formatter, class Converter = UTF8Converter>
+    template<class Formatter>
     class RollingFileAppender : public IAppender
     {
     public:
-        RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0)
+        RollingFileAppender(const char* fileName, size_t maxFileSize = 0, int maxFiles = 0)
             : m_fileSize()
             , m_maxFileSize((std::max)(maxFileSize, static_cast<size_t>(1000))) // set a lower limit for the maxFileSize
             , m_lastFileNumber((std::max)(maxFiles - 1, 0))
@@ -43,7 +42,7 @@ namespace plog
                 rollLogFiles();
             }
 
-            int bytesWritten = m_file.write(Converter::convert(Formatter::format(record)));
+            int bytesWritten = m_file.write(Formatter::format(record));
 
             if (bytesWritten > 0)
             {
@@ -56,13 +55,13 @@ namespace plog
         {
             m_file.close();
 
-            util::nstring lastFileName = buildFileName(m_lastFileNumber);
+            std::string lastFileName = buildFileName(m_lastFileNumber);
             util::File::unlink(lastFileName.c_str());
 
             for (int fileNumber = m_lastFileNumber - 1; fileNumber >= 0; --fileNumber)
             {
-                util::nstring currentFileName = buildFileName(fileNumber);
-                util::nstring nextFileName = buildFileName(fileNumber + 1);
+                std::string currentFileName = buildFileName(fileNumber);
+                std::string nextFileName = buildFileName(fileNumber + 1);
 
                 util::File::rename(currentFileName.c_str(), nextFileName.c_str());
             }
@@ -72,12 +71,12 @@ namespace plog
 
         void openLogFile()
         {
-            util::nstring fileName = buildFileName();
+            std::string fileName = buildFileName();
             m_fileSize = m_file.open(fileName.c_str());
 
             if (0 == m_fileSize)
             {
-                int bytesWritten = m_file.write(Converter::header(Formatter::header()));
+                int bytesWritten = m_file.write(Formatter::header());
 
                 if (bytesWritten > 0)
                 {
@@ -86,9 +85,9 @@ namespace plog
             }
         }
 
-        util::nstring buildFileName(int fileNumber = 0)
+        std::string buildFileName(int fileNumber = 0)
         {
-            util::nstringstream ss;
+            std::stringstream ss;
             ss << m_fileNameNoExt;
             
             if (fileNumber > 0)
@@ -110,8 +109,8 @@ namespace plog
         size_t          m_fileSize;
         const size_t    m_maxFileSize;
         const int       m_lastFileNumber;
-        util::nstring   m_fileExt;
-        util::nstring   m_fileNameNoExt;
+        std::string   m_fileExt;
+        std::string   m_fileNameNoExt;
         bool            m_firstWrite;
     };
 }
