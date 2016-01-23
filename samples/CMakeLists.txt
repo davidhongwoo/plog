@@ -65,6 +65,9 @@ set_target_properties(CustomFormatter PROPERTIES FOLDER Samples)
 add_executable(CustomAppender CustomAppender/Main.cpp) 
 set_target_properties(CustomAppender PROPERTIES FOLDER Samples)
 
+add_executable(InMemoryAppender InMemoryAppender/Main.cpp) 
+set_target_properties(InMemoryAppender PROPERTIES FOLDER Samples)
+
 add_executable(CustomType CustomType/Main.cpp) 
 set_target_properties(CustomType PROPERTIES FOLDER Samples)
 
