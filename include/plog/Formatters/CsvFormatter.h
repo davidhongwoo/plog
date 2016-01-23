@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_CSV_FOMMATTER_H_
+#define _PLOG_CSV_FOMMATTER_H_
+
 #include <iomanip>
 #include <string>
 #include <plog/Util.h>
@@ -51,3 +53,5 @@ namespace plog
         static const size_t kMaxMessageSize = 32000;
     };
 }
+
+#endif

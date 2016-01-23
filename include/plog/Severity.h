@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _PLOG_SEVERITY_H_
+#define _PLOG_SEVERITY_H_
 
 namespace plog
 {
@@ -47,3 +48,5 @@ namespace plog
         return none;
     }
 }
+
+#endif

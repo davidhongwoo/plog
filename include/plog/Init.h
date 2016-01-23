@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_INIT_H_
+#define _PLOG_INIT_H_
+
 #include <cstring>
 #include <plog/Logger.h>
 #include <plog/Formatters/CsvFormatter.h>
@@ -89,3 +91,5 @@ namespace plog
     }
 #endif
 }
+
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_UTIL_H_
+#define _PLOG_UTIL_H_
+
 #include <cassert>
 #include <cstring>
 #include <cstdio>
@@ -331,3 +333,5 @@ namespace plog
         T* Singleton<T>::m_instance = NULL;
     }
 }
+
+#endif

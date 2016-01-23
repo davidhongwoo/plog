@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_COLOR_CONSOLE_APPENDER_H_
+#define _PLOG_COLOR_CONSOLE_APPENDER_H_
+
 #include "ConsoleAppender.h"
 
 namespace plog
@@ -103,3 +105,5 @@ namespace plog
 #endif
     };
 }
+
+#endif

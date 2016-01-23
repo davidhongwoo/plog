@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_ANDROID_APPENDER_H_
+#define _PLOG_ANDROID_APPENDER_H_
+
 #include <android/log.h>
 
 namespace plog
@@ -44,3 +46,5 @@ namespace plog
         const char* const m_tag;
     };
 }
+
+#endif

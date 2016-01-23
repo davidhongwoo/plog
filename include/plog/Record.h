@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_RECORD_H_
+#define _PLOG_RECORD_H_
+
 #include <sstream>
 #include <plog/Util.h>
 #include <plog/Severity.h>
@@ -98,3 +100,5 @@ namespace plog
         const char* const   m_func;
     };
 }
+
+#endif

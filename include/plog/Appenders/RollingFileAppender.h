@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_ROLLING_FILE_APPENDER_H_
+#define _PLOG_ROLLING_FILE_APPENDER_H_
+
 #include <algorithm>
 #include <plog/Util.h>
 
@@ -114,3 +116,5 @@ namespace plog
         bool            m_firstWrite;
     };
 }
+
+#endif

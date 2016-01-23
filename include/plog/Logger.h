@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_LOGGER_H_
+#define _PLOG_LOGGER_H_
+
 #include <vector>
 #include <plog/Appenders/IAppender.h>
 #include <plog/Util.h>
@@ -71,3 +73,5 @@ namespace plog
         return Logger<PLOG_DEFAULT_INSTANCE>::getInstance();
     }
 }
+
+#endif

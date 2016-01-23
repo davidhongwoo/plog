@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_FUNC_MESSAGE_FOMATTER_H_
+#define _PLOG_FUNC_MESSAGE_FOMATTER_H_
+
 #include <iomanip>
 #include <plog/Util.h>
 
@@ -22,3 +24,5 @@ namespace plog
         }
     };
 }
+
+#endif

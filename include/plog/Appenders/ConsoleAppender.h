@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_CONSOLE_APPENDER_H_
+#define _PLOG_CONSOLE_APPENDER_H_
+
 #include <iostream>
 
 namespace plog
@@ -24,3 +26,5 @@ namespace plog
         }
     };
 }
+
+#endif

@@ -1,6 +1,5 @@
-/* #ifndef _IN_MEMORY_APPENDER_ */
-/* #define _IN_MEMORY_APPENDER_ */
-#pragma once
+#ifndef _IN_MEMORY_APPENDER_ 
+#define _IN_MEMORY_APPENDER_ 
 
 #include <deque>
 
@@ -33,4 +32,4 @@ namespace plog
 	};
 }
 
-//#endif // end of _IN_MEMORY_APPENDER_
+#endif

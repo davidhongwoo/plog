@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLOG_TXT_FORMATTER_H_
+#define _PLOG_TXT_FORMATTER_H_
+
 #include <iomanip>
 #include <plog/Util.h>
 
@@ -29,3 +31,5 @@ namespace plog
         }
     };
 }
+
+#endif

@@ -3,7 +3,9 @@
 //  Documentation and sources: https://github.com/SergiusTheBest/plog
 //  License: MPL 2.0, http://mozilla.org/MPL/2.0/
 
-#pragma once
+#ifndef _PLOG_LOG_H_
+#define _PLOG_LOG_H_
+
 #include <plog/Record.h>
 #include <plog/Logger.h>
 #include <plog/Init.h>
@@ -98,3 +100,5 @@
 #define LOGW_IF_(instance, condition)           LOG_WARNING_IF_(instance, condition)
 #define LOGE_IF_(instance, condition)           LOG_ERROR_IF_(instance, condition)
 #define LOGF_IF_(instance, condition)           LOG_FATAL_IF_(instance, condition)
+
+#endif // _PLOG_LOG_H_

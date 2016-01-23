@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _PLOG_IAPPENDER_H_
+#define _PLOG_IAPPENDER_H_
 
 namespace plog
 {
@@ -12,3 +13,5 @@ namespace plog
         virtual void write(const Record& record) = 0;
     };
 }
+
+#endif
