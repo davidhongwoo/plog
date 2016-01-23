@@ -35,7 +35,6 @@ Pretty powerful log in less than 1000 lines of code [![Build Status](https://tra
   - [Stream improvements over std::ostream](#stream-improvements-over-stdostream)
   - [Automatic 'this' pointer capture](#automatic-this-pointer-capture)
   - [Headers to include](#headers-to-include)
-  - [Unicode](#unicode)
   - [Performance](#performance)
 - [Extending](#extending)
   - [Custom data type](#custom-data-type)
@@ -109,7 +108,7 @@ At first your project needs to know about plog. For that you have to:
 The next step is to initialize the [Logger](#logger). This is done by the following `plog::init` function:
 
 ```cpp
-Logger& init(Severity maxSeverity, const char/wchar_t* fileName, size_t maxFileSize = 0, int maxFiles = 0);
+Logger& init(Severity maxSeverity, const char* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
 
 `maxSeverity` is the logger severity upper limit. All log messages have its own severity and if it is higher than the limit those messages are dropped. Plog defines the following severity levels:
@@ -386,7 +385,7 @@ int main()
 ##Overview
 Plog is designed to be small but flexible, so it prefers templates to interface inheritance. All main entities are shown on the following UML diagram:
 
-![Plog class diagram](http://gravizo.com/g?@startuml;interface%20IAppender%20{;%20%20%20%20+write%28%29;};class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};class%20RollingFileAppender<Formatter,%20Converter>;class%20ConsoleAppender<Formatter>;class%20ColorConsoleAppender<Formatter>;class%20AndroidAppender<Formatter>;ConsoleAppender%20<|--%20ColorConsoleAppender;IAppender%20<|-u-%20Logger;IAppender%20<|--%20RollingFileAppender;IAppender%20<|--%20ConsoleAppender;IAppender%20<|--%20AndroidAppender;Logger%20"1"%20o--%20"0..n"%20IAppender;class%20CsvFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20TxtFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20FuncMessageFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
+![Plog class diagram](http://gravizo.com/g?@startuml;interface%20IAppender%20{;%20%20%20%20+write%28%29;};class%20Logger<int%20instance>%20<<singleton>>%20{;%20%20%20%20+addAppender%28%29;%20%20%20%20+getMaxSeverity%28%29;%20%20%20%20+setMaxSeverity%28%29;%20%20%20%20+checkSeverity%28%29;%20%20%20%20-maxSeverity;%20%20%20%20-appenders;};class%20RollingFileAppender<Formatter>;class%20ConsoleAppender<Formatter>;class%20ColorConsoleAppender<Formatter>;class%20AndroidAppender<Formatter>;ConsoleAppender%20<|--%20ColorConsoleAppender;IAppender%20<|-u-%20Logger;IAppender%20<|--%20RollingFileAppender;IAppender%20<|--%20ConsoleAppender;IAppender%20<|--%20AndroidAppender;Logger%20"1"%20o--%20"0..n"%20IAppender;class%20CsvFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20TxtFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};class%20FuncMessageFormatter%20{;%20%20%20%20{static}%20header%28%29;%20%20%20%20{static}%20format%28%29;};enum%20Severity%20{;%20%20%20%20none,;%20%20%20%20fatal,;%20%20%20%20error,;%20%20%20%20warning,;%20%20%20%20info,;%20%20%20%20debug,;%20%20%20%20verbose;};class%20Record%20{;%20%20%20%20+operator<<%28%29;%20%20%20%20-time;%20%20%20%20-severity;%20%20%20%20-tid;%20%20%20%20-object;%20%20%20%20-line;%20%20%20%20-message;%20%20%20%20-func;};hide%20empty%20members;hide%20empty%20fields;@enduml)
 <!-- 
 @startuml
 interface IAppender {
@@ -402,7 +401,7 @@ class Logger<int instance> <<singleton>> {
     -appenders;
 }
 
-class RollingFileAppender<Formatter, Converter>
+class RollingFileAppender<Formatter>
 class ConsoleAppender<Formatter>
 class ColorConsoleAppender<Formatter>
 class AndroidAppender<Formatter>
@@ -462,11 +461,10 @@ There are 5 functional parts:
 - [Record](#record) - keeps log data: time, message, etc
 - [Appender](#appender) - represents a log data destination: file, console, etc
 - [Formatter](#formatter) - formats log data into a string
-- [Converter](#converter) - converts formatter output into a raw buffer
 
 The log data flow is shown below:
 
-![Log data flow](http://gravizo.com/g?@startuml;%28*%29%20-r->%20"LOG%20macro";-r->%20"Record";-r->%20"Logger";-r-->%20"Appender";-d->%20"Formatter";-d->%20"Converter";-u->%20"Appender";-r->%20%28*%29;@enduml)
+![Log data flow](http://gravizo.com/g?@startuml;%28*%29%20-r->%20"LOG%20macro";-r->%20"Record";-r->%20"Logger";-r-->%20"Appender";-d->%20"Formatter";-u->%20"Appender";-r->%20%28*%29;@enduml)
 <!--
 @startuml
 (*) -r-> "LOG macro"
@@ -474,7 +472,6 @@ The log data flow is shown below:
 -r-> "Logger"
 -r-> "Appender"
 -d-> "Formatter"
--d-> "Converter"
 -u-> "Appender"
 -r-> (*)
 @enduml
@@ -524,7 +521,6 @@ public:
     // Stream output operators
         
     Record& operator<<(char data);
-    Record& operator<<(wchar_t data);
     
     template<typename T>
     Record& operator<<(const T& data);
@@ -537,7 +533,7 @@ public:
     unsigned int getTid() const;
     const void* getObject() const;
     size_t getLine() const;
-    const util::nstring getMessage() const;
+    const std::string getMessage() const;
     std::string getFunc() const;
 };
 ```
@@ -553,8 +549,8 @@ public:
 class Formatter
 {
 public:
-    static util::nstring header();
-    static util::nstring format(const Record& record);
+    static std::string header();
+    static std::string format(const Record& record);
 };
 ```
 
@@ -605,22 +601,8 @@ Object::Object@8:
 Object::~Object@13: 
 ```
 
-##Converter
-[Converter](#converter) is responsible for conversion of [Formatter](#formatter) output data to a raw buffer (represented as `std::string`). It is used by [RollingFileAppender](#rollingfileappender) to perform a conversion before writing to a file. There is no base class for converters, they are implemented as classes with static functions `convert` and `header`: 
-
-```cpp
-class Converter
-{
-public:
-    static std::string header(const util::nstring& str);
-    static std::string convert(const util::nstring& str);
-};
-```
-
-*See [How to implement a custom converter](#custom-converter).*
-
 ##Appender
-[Appender](#appender) uses [Formatter](#formatter) and [Converter](#converter) to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must implement `IAppender` interface (the only interface in plog):
+[Appender](#appender) uses [Formatter](#formatter) to get a desired representation of log data and outputs (appends) it to a file/console/etc. All appenders must implement `IAppender` interface (the only interface in plog):
 
 ```cpp
 class IAppender
@@ -634,10 +616,10 @@ public:
 *See [How to implement a custom appender](#custom-appender).*
 
 ###RollingFileAppender
-This appender outputs log data to a file with rolling behaviour. As template parameters it accepts both [Formatter](#formatter) and [Converter](#converter).
+This appender outputs log data to a file with rolling behaviour. As template parameters it accepts [Formatter](#formatter).
 
 ```cpp
-RollingFileAppender<Formatter, Converter>::RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0);
+RollingFileAppender<Formatter>::RollingFileAppender(const util::nchar* fileName, size_t maxFileSize = 0, int maxFiles = 0);
 ```
 
 - `fileName` - a log file name
@@ -689,9 +671,8 @@ LOGD << /* the following statements will be executed only when the logger severi
 ##Stream improvements over std::ostream
 Stream output in plog has several improvements over the standard `std::ostream`:
 
-- handles wide chars/strings: `wchar_t`, `wchar_t*`, `std::wstring`
-- handles `NULL` values for C-strings: `char*` and `wchar_t*`
-- implicitly casts objects to: `std::string` and `std::wstring` (if they have an appropriate cast operator)
+- handles `NULL` values for C-strings: `char*` 
+- implicitly casts objects to: `std::string` (if they have an appropriate cast operator)
 
 ##Automatic 'this' pointer capture
 'This' pointer is captured automatically to log data and can be printed by [CsvFormatter](#csvformatter). Unfortunately this feature is supported only on msvc 2010 and higher.
@@ -699,7 +680,7 @@ Stream output in plog has several improvements over the standard `std::ostream`:
 ##Headers to include
 The core plog functionality is provided by inclusion of `plog/Log.h` file. Extra components require inclusion of corresponding extra headers after `plog/Log.h`.
 
-![Plog core and extra components](http://gravizo.com/g?@startuml;package%20"Plog%20core\\n%28no%20additional%20include,%20just%20plog/Log.h%29"%20{;%20%20class%20TxtFormatter;%20%20class%20CsvFormatter;%20%20class%20UTF8Converter;%20%20class%20RollingFileAppender;};package%20"Plog%20extra\\n%28requires%20additional%20include%29"%20{;%20%20class%20FuncMessageFormatter;%20%20class%20ConsoleAppender;%20%20class%20ColorConsoleAppender;%20%20class%20AndroidAppender;};hide%20empty%20members;hide%20empty%20fields;@enduml)
+![Plog core and extra components](http://gravizo.com/g?@startuml;package%20"Plog%20core\\n%28no%20additional%20include,%20just%20plog/Log.h%29"%20{;%20%20class%20TxtFormatter;%20%20class%20CsvFormatter;%20%20class%20RollingFileAppender;};package%20"Plog%20extra\\n%28requires%20additional%20include%29"%20{;%20%20class%20FuncMessageFormatter;%20%20class%20ConsoleAppender;%20%20class%20ColorConsoleAppender;%20%20class%20AndroidAppender;};hide%20empty%20members;hide%20empty%20fields;@enduml)
 <!--
 @startuml
 package "Plog core\n(no additional include, just plog/Log.h)" {
@@ -756,7 +737,7 @@ namespace plog
 *Refer to [CustomType](samples/CustomType) for a complete sample.*
 
 ##Custom appender
-A custom appender must implement `IAppender` interface. Also it may accept [Formatter](#formatter) and [Converter](#converter) as template parameters however this is optional.
+A custom appender must implement `IAppender` interface. Also it may accept [Formatter](#formatter) as template parameters however this is optional.
 
 ```cpp
 namespace plog
@@ -784,33 +765,13 @@ namespace plog
     class MyFormatter
     {
     public:
-        static util::nstring header();
-        static util::nstring format(const Record& record);
+        static std::string header();
+        static std::string format(const Record& record);
     };
 }
 ```
 
 *Refer to [CustomFormatter](samples/CustomFormatter) for a complete sample.*
-
-##Custom converter
-A converter must be a class with 2 static methods:
-
-- `header` - converts a header for a new log
-- `convert` - converts log messages
-
-```cpp
-namespace plog
-{
-    class MyConverter
-    {
-    public:
-        static std::string header(const util::nstring& str);
-        static std::string convert(const util::nstring& str);
-    };
-}
-```
-
-*Refer to [CustomConverter](samples/CustomConverter) for a complete sample.*
 
 #Samples
 There are a number of samples that demonstrate various aspects of using plog. They can be found in the [samples](samples) folder:
@@ -828,7 +789,6 @@ There are a number of samples that demonstrate various aspects of using plog. Th
 |[ColorConsole](samples/ColorConsole)|Shows how to use a color console appender.|
 |[CustomAppender](samples/CustomAppender)|Shows how to implement a custom appender that stores log messages in memory.|
 |[CustomFormatter](samples/CustomFormatter)|Shows how to implement a custom formatter.|
-|[CustomConverter](samples/CustomConverter)|Shows how to implement a custom converter that encrypts log messages.|
 |[CustomType](samples/CustomType)|Shows how to print a custom type to the log stream.|
 |[Facilities](samples/Facilities)|Shows how to use logging per facilities via multiple logger instances (useful for big projects).|
 |[Performance](samples/Performance)|Measures time per a log call.|
