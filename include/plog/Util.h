@@ -1,5 +1,5 @@
 #ifndef _PLOG_UTIL_H_
-#define _PLOG_UTIL_H_
+#define _PLOG_UTIL_H_ 0
 
 #include <cassert>
 #include <cstring>
@@ -23,12 +23,7 @@
 #   endif
 #endif
 
-#ifdef _WIN32
-#   define _PLOG_NSTR(x)   L##x
-#   define PLOG_NSTR(x)    _PLOG_NSTR(x)
-#else
-#   define PLOG_NSTR(x)    x
-#endif
+#define PLOG_NSTR(x)    x
 
 namespace plog
 {
@@ -114,11 +109,7 @@ namespace plog
 
         inline const char* findExtensionDot(const char* fileName)
         {
-#ifdef _WIN32
-            return std::wcsrchr(fileName, L'.');
-#else
             return std::strrchr(fileName, '.');
-#endif
         }
 
         inline void splitFileName(const char* fileName, std::string& fileNameNoExt, std::string& fileExt)
@@ -171,7 +162,7 @@ namespace plog
 #if defined(_WIN32) && (defined(__BORLANDC__) || defined(__MINGW32__))
                 m_file = ::_wsopen(fileName, _O_CREAT | _O_WRONLY | _O_BINARY, SH_DENYWR, _S_IREAD | _S_IWRITE);
 #elif defined(_WIN32) 
-                ::_wsopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
+                ::_sopen_s(&m_file, fileName, _O_CREAT | _O_WRONLY | _O_BINARY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
 #else
                 m_file = ::open(fileName, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
@@ -218,7 +209,7 @@ namespace plog
             static int unlink(const char* fileName)
             {
 #ifdef _WIN32
-                return ::_wunlink(fileName);
+                return ::_unlink(fileName);
 #else
                 return ::unlink(fileName);
 #endif
@@ -227,7 +218,7 @@ namespace plog
             static int rename(const char* oldFilename, const char* newFilename)
             {
 #ifdef _WIN32
-                return ::MoveFileW(oldFilename, newFilename);
+                return ::MoveFile(oldFilename, newFilename);
 #else
                 return ::rename(oldFilename, newFilename);
 #endif

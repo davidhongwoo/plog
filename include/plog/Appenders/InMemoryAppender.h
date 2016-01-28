@@ -1,7 +1,8 @@
-#ifndef _IN_MEMORY_APPENDER_ 
-#define _IN_MEMORY_APPENDER_ 
+#ifndef _IN_MEMORY_APPENDER_H_ 
+#define _IN_MEMORY_APPENDER_H_ 0 
 
 #include <deque>
+#include <string>
 
 namespace plog
 {
@@ -29,6 +30,8 @@ namespace plog
 	private:
 		std::deque<std::string> m_logList;
 		const size_t m_logMaxSize;
+
+		InMemoryAppender& operator=(const InMemoryAppender&);
 	};
 }
 

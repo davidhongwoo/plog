@@ -18,11 +18,7 @@ namespace plog
 
         virtual void write(const Record& record)
         {
-#ifdef _WIN32
-            std::wcout << Formatter::format(record) << std::flush;
-#else
             std::cout << Formatter::format(record) << std::flush;
-#endif
         }
     };
 }
